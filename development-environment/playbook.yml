@@ -1,0 +1,62 @@
+---
+- name: Install Development Environment
+  hosts: all
+  remote_user: root
+  
+  tasks:
+
+  # Perform system updates with the correct keyring  
+  - name: setup keyring and GPG signing key
+    shell: pacman-key --init
+    args:
+      creates: /etc/pacman.d/gnupg
+  
+  - name: populate the trusted keys
+    shell: pacman-key --populate archlinux
+  
+  - name: refresh developer keys
+    shell: pacman-key --refresh-keys || true
+
+  - name: upgrade the archlinux keyring (should contain the latest keys)
+    shell: pacman -Sy --noconfirm archlinux-keyring
+
+  - name: synchronise repository dbs and update system packages
+    shell: pacman -Syu --noconfirm
+
+  # Set the system timezone
+  - name: synchronize the system time with an NTP server
+    shell: timedatectl set-ntp true
+
+  - name: set timezone
+    shell: timedatectl set-timezone Europe/London
+
+  # User Management
+  - name: allow members of the wheel group to perform sudo commands
+    shell: echo '%wheel ALL=(ALL)' >> /etc/sudoers
+
+  - name: add my user
+    shell: useradd -m -G wheel -s /bin/zsh sean
+  
+  # Install packages
+  - name: install my favourite tools
+    shell: pacman -S --noconfirm git tmux neovim ranger python-pip lynx docker ansible zsh zsh-completions eslint nodejs npm firefox sudo zsh unzip
+
+  - name: install npm tools (as my user)
+    shell: npm install --global remark-cli remark-html remark-preset-lint-markdown-style-guide js-beautify
+
+  - name: install neovim plugins (as my user)
+    shell: runuser -l sean -c 'mkdir -p ~/.local/share/nvim/site/pack/git-plugins/start && cd ~/.local/share/nvim/site/pack/git-plugins/start && git clone https://github.com/w0rp/ale.git && git clone https://github.com/sbdchd/neoformat.git'
+
+  - name: install packer
+    shell: curl https://releases.hashicorp.com/packer/1.1.0/packer_1.1.0_linux_arm64.zip -o /tmp/packerdl && unzip /tmp/packerdl && mv packer /usr/bin
+    args:
+      creates: /usr/bin/packer
+
+  # configure dotfiles
+  - name: clone dotfiles from git
+    shell: git clone https://github.com/chickenninja/dotfiles
+
+  # Remember to do some manual tasks at the end
+  - name: set password
+    debug: 
+      msg: "Remember to run 'passwd sean'"
