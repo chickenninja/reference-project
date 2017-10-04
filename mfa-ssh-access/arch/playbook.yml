@@ -1,0 +1,22 @@
+---
+- name: Require Yubikey authentication for SSH
+  hosts: all
+  remote_user: root
+  tasks:
+
+  - name: install yubico-pam
+    shell: pacman -S --noconfirm yubico-pam
+
+  - name: create yubico directory
+    shell: mkdir -p /etc/yubico
+  
+  - name: copy authorization mapping
+    template:
+      src: templates/authorized_yubikeys.j2
+      dest: /etc/yubico/authorized_yubikeys
+  
+  - name: configure PAM 
+    shell: echo "auth    required    pam_yubico.so id={{ yubicloudClientId }} authfile=/etc/yubico/authorized_yubikeys" | cat - /etc/pam.d/sshd > /tmp/out && mv /tmp/out /etc/pam.d/sshd
+
+  - name: remove root login
+    shell: sed -i "s/PermitRootLogin yes/PermitRootLogin no/g" /etc/ssh/sshd_config

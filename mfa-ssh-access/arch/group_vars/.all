@@ -1,0 +1,6 @@
+---
+# Example of the group vars required
+
+yubicloudClientId: abc
+yubikey: first12chars
+yubikeyBackup: first12chars
