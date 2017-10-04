@@ -32,7 +32,7 @@
 
   # User Management
   - name: allow members of the wheel group to perform sudo commands
-    shell: echo '%wheel ALL=(ALL)' >> /etc/sudoers
+    shell: echo '%wheel ALL=(ALL) ALL' >> /etc/sudoers
 
   - name: add my user
     shell: useradd -m -G wheel -s /bin/zsh sean
@@ -54,7 +54,7 @@
 
   # configure dotfiles
   - name: clone dotfiles from git
-    shell: git clone https://github.com/chickenninja/dotfiles
+    shell: runuser -l sean -c 'git clone https://github.com/chickenninja/dotfiles'
 
   # Remember to do some manual tasks at the end
   - name: set password
