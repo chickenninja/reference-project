@@ -56,6 +56,9 @@
   - name: clone dotfiles from git
     shell: runuser -l sean -c 'git clone https://github.com/chickenninja/dotfiles'
 
+  - name: setup dotfiles
+    shell: runuser -l sean -c 'cd dotfiles && chmod +x link.sh && ./link.sh'
+
   # Remember to do some manual tasks at the end
   - name: set password
     debug: 
