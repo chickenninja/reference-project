@@ -1,4 +1,4 @@
-#Multifactor SSH Support
+# Multifactor SSH Support
 
 This playbook disables root SSH access and enabled Yubikey SSH support for Arch Linux.
 
