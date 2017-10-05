@@ -11,7 +11,6 @@ Firstly, you must log into Last Pass:
 ``` shell
 lpass login (username)
 ```
-
 and following the password and multifactor auth prompts.
 
 List Passwords:
