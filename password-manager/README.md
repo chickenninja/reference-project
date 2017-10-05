@@ -42,3 +42,9 @@ Use a password in the shell:
 ``` shell
 $(lpass show (name) --password)
 ```
+
+Example: using Last Pass credentials to push to git
+
+``` shell
+git push --repo https://$(lpass show github --username):$(lpass show github --password)@github.com/chickenninja/repo.git
+```
