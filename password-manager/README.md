@@ -6,7 +6,7 @@ The LastPass CLI can be installed using the Arch package manager:
 pacman -S lastpass-cli
 ```
 
-Firstly, you must log into Last Pass
+Firstly, you must log into Last Pass:
 
 ``` shell
 lpass login (username)
