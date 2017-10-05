@@ -1,0 +1,9 @@
+---
+- name: Install Password Manager
+  hosts: all
+  remote_user: root
+  
+  tasks:
+  - name: install Last Pass CLI
+    shell: pacman -S --noconfirm lastpass-cli
+
