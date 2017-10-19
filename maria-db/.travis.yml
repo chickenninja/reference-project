@@ -1,0 +1,20 @@
+language: node_js
+sudo: enabled
+env:
+  - UPass="UPassword123"
+  - RPass="RPassword123"
+  - DB_NAME="Test"
+before_install:
+  - sudo apt-get update 
+  - sudo apt-get install -y software-properties-common 
+  - sudo apt-add-repository -y ppa:ansible/ansible
+  - sudo apt-get update 
+  - sudo apt-get install -y curl docker ansible unzip
+  - curl -L https://releases.hashicorp.com/packer/1.1.1/packer_1.1.1_linux_amd64.zip -o /tmp/packer-dl
+  - unzip /tmp/packer-dl -d /tmp/packer
+
+install:
+  - /tmp/packer/packer build packer.json
+script:
+  - docker run -it -p 3306:3006 chickenninja/mariadb
+  - mysql -u sean -p $UPass -e "SELECT version();"

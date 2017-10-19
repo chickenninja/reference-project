@@ -1,0 +1,26 @@
+---
+- name: install mysql and create db
+  hosts: all
+  #vars:
+  #  PASS="TestPassword123"
+  tasks:
+  - name: update sources
+    shell: apt-get update
+  
+  - name: install mysql
+    shell: apt-get install -y mysql-server mysql-client
+  
+  - name: start mysql
+    shell: /etc/init.d/mysql restart 
+  
+  - name: set credentials
+    shell: mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '{{ rootPass }}';"
+
+  - name: create db
+    shell: mysql -e "CREATE DATABASE IF NOT EXISTS {{ dbName  }};"
+
+  - name: add user to manage create db
+    shell: mysql -e "CREATE USER 'sean'@'localhost' IDENTIFIED BY '{{ userPass }}';"
+
+  - name: grant user privileges to access db
+    shell: mysql -e "GRANT ALL PRIVILEGES ON {{ dbName }}.* TO 'sean'@'localhost'; FLUSH PRIVILEGES;"
